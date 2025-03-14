@@ -120,7 +120,7 @@
 				</div>
 			</label>
 		</div>
-		{#each files as file}
+		{#each files as file, i}
 			<div class="flex items-center">
 				<button
 					onclick={() => (selectedFile = file)}
@@ -133,8 +133,9 @@
 				<div class="bg-muted flex h-full items-center px-1">
 					<button
 						onclick={() => {
-							if (selectedFile === file) selectedFile = null;
 							files = files.filter((f) => f !== file);
+							if (selectedFile === file)
+								selectedFile = files.length ? files[i === 0 ? 0 : i - 1] : null;
 						}}
 						class="hover:bg-secondary cursor-pointer p-1"
 					>
