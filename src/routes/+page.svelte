@@ -7,7 +7,7 @@
 	import SubContent from './SubContent.svelte';
 
 	// Constants
-	const maxFiles = 10;
+	const maxFiles = 15;
 	const allowedFileTypes = '.Map.Gbx,.Challenge.Gbx,.Replay.Gbx,.Ghost.Gbx';
 
 	let files: ProcessedFile[] = [];
@@ -25,7 +25,8 @@
 	const addUniqueFiles = (newFiles: File[]) => {
 		const existingFileNames = new Set(files.map((file: ProcessedFile) => file.file.name));
 		const uniqueNewFiles = newFiles.filter(({ name }) => !existingFileNames.has(name));
-		const processedFiles = uniqueNewFiles.map(async (file): Promise<ProcessedFile> => {
+		const trimmedFiles = uniqueNewFiles.splice(0, maxFiles - files.length);
+		const processedFiles = trimmedFiles.map(async (file): Promise<ProcessedFile> => {
 			const arrayBuffer = await file.arrayBuffer();
 			const buffer = Array.from(new Uint8Array(arrayBuffer));
 
@@ -73,7 +74,10 @@
 </script>
 
 <div class="flex gap-4">
-	<div class="flex w-sm shrink-0 flex-col gap-2">
+	<div
+		data-selected={!selectedFile || null}
+		class="flex w-sm shrink-0 flex-col gap-2 data-selected:w-full"
+	>
 		<div>
 			<input
 				hidden
@@ -100,7 +104,7 @@
 				ondragover={(event) => event.preventDefault()}
 				ondrop={(event) => {
 					event.preventDefault();
-					handleDrop;
+					handleDrop(event);
 				}}
 			>
 				<div
@@ -117,26 +121,37 @@
 			</label>
 		</div>
 		{#each files as file}
-			<button
-				onclick={() => (selectedFile = file)}
-				data-selected={selectedFile === file || null}
-				class="bg-muted flex cursor-pointer items-center justify-between gap-2 border-l-4 p-2 shadow-sm data-selected:border-indigo-500"
-				title={TextFormatter.deformat(file.file.name)}
-			>
-				<div class="truncate pl-2">{TextFormatter.deformat(file.file.name)}</div>
-				<!-- svelte-ignore a11y_click_events_have_key_events -->
-				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div
-					onclick={() => {
-						if (selectedFile === file) selectedFile = null;
-						files = files.filter((f) => f !== file);
-					}}
-					class="hover:bg-secondary cursor-pointer p-1"
+			<div class="flex items-center">
+				<button
+					onclick={() => (selectedFile = file)}
+					data-selected={selectedFile === file || null}
+					class="bg-muted grow cursor-pointer truncate border-l-4 py-2 pl-4 text-left shadow-sm data-selected:border-indigo-500"
+					title={TextFormatter.deformat(file.file.name)}
 				>
-					<Icon icon="pixelarticons:close" class="size-6" />
+					<div class="truncate pl-2">{TextFormatter.deformat(file.file.name)}</div>
+				</button>
+				<div class="bg-muted flex h-full items-center px-1">
+					<button
+						onclick={() => {
+							if (selectedFile === file) selectedFile = null;
+							files = files.filter((f) => f !== file);
+						}}
+						class="hover:bg-secondary cursor-pointer p-1"
+					>
+						<Icon icon="pixelarticons:close" class="size-6" />
+					</button>
 				</div>
-			</button>
+			</div>
 		{/each}
+		{#if files.length}
+			<div class="text-muted-fg text-right text-sm font-medium">
+				{files.length} / {maxFiles} files
+			</div>
+		{:else}
+			<div class="text-muted-fg text-right text-sm font-medium">
+				Support files: {allowedFileTypes.split(',').join(', ')}
+			</div>
+		{/if}
 	</div>
 	{#if selectedFile}
 		{@const {
