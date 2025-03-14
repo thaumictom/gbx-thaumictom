@@ -1,1 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,100..900;125,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+
 @import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--font-sans: 'Archivo', sans-serif;
+	--font-display: 'Archivo', sans-serif;
+	--font-display--font-variation-settings: 'wdth' 125;
+	--font-mono: 'IBM Plex Mono', monospace;
+
+	--color-white: #ffffff;
+	--color-black: #0e1012;
+	--color-transparent: transparent;
+	--color-current: currentColor;
+
+	/* Open color */
+	--color-gray-50: #f8f9fa;
+	--color-gray-100: #f1f3f5;
+	--color-gray-200: #e9ecef;
+	--color-gray-300: #dee2e6;
+	--color-gray-400: #ced4da;
+	--color-gray-500: #adb5bd;
+	--color-gray-600: #868e96;
+	--color-gray-700: #495057;
+	--color-gray-800: #343a40;
+	--color-gray-900: #212529;
+}
+
+@theme {
+	--color-default: var(--theme-default);
+	--color-default-inverse: var(--theme-default-inverse);
+
+	--color-foreground: var(--theme-foreground);
+
+	--color-primary: var(--theme-primary);
+	--color-primary-fg: var(--theme-primary-fg);
+
+	--color-secondary: var(--theme-secondary);
+	--color-secondary-fg: var(--theme-secondary-fg);
+
+	--color-muted: var(--theme-muted);
+	--color-muted-fg: var(--theme-muted-fg);
+
+	--color-danger: var(--theme-danger);
+	--color-danger-fg: var(--theme-danger-fg);
+
+	--color-warn: var(--theme-warn);
+	--color-warn-fg: var(--theme-warn-fg);
+
+	--color-success: var(--theme-success);
+	--color-success-fg: var(--theme-success-fg);
+
+	--color-border: var(--theme-border);
+	--color-border-secondary: var(--theme-border-secondary);
+}
+
+@layer base {
+	/* light theme */
+	html.light {
+		--theme-default: theme('colors.white');
+		--theme-default-inverse: theme('colors.black');
+
+		/* e.g.: base text color */
+		--theme-foreground: theme('colors.gray.800');
+
+		/* e.g.: inverted button */
+		--theme-primary: theme('colors.gray.900');
+		--theme-primary-fg: theme('colors.gray.100');
+
+		/* e.g.: secondary button */
+		--theme-secondary: theme('colors.gray.200');
+		--theme-secondary-fg: theme('colors.gray.600');
+
+		/* e.g.: muted text */
+		--theme-muted: theme('colors.gray.100');
+		--theme-muted-fg: theme('colors.gray.500');
+
+		/* util */
+		--theme-border: theme('colors.gray.300');
+		--theme-border-secondary: theme('colors.gray.300');
+	}
+
+	/* dark theme */
+	html.dark {
+		--theme-default: theme('colors.black');
+		--theme-default-inverse: theme('colors.white');
+
+		--theme-foreground: theme('colors.gray.200');
+
+		--theme-primary: theme('colors.gray.100');
+		--theme-primary-fg: theme('colors.gray.900');
+
+		--theme-secondary: theme('colors.gray.800');
+		--theme-secondary-fg: theme('colors.gray.500');
+
+		--theme-muted: theme('colors.gray.900');
+		--theme-muted-fg: theme('colors.gray.600');
+
+		--theme-border: theme('colors.gray.700');
+		--theme-border-secondary: theme('colors.gray.800');
+	}
+
+	/* theme independent */
+	html {
+		/* e.g.: accented button */
+		--theme-brand: theme('colors.teal.400');
+		--theme-brand-fg: theme('colors.gray.900');
+
+		/* e.g.: danger button */
+		--theme-danger: theme('colors.red.500');
+		--theme-danger-fg: theme('colors.gray.100');
+
+		/* e.g.: warn button */
+		--theme-warn: theme('colors.amber.600');
+		--theme-warn-fg: theme('colors.gray.100');
+
+		/* e.g.: success button */
+		--theme-success: theme('colors.cyan.600');
+		--theme-success-fg: theme('colors.gray.100');
+	}
+
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--theme-border, currentColor);
+	}
+
+	:focus:not(:focus-visible) {
+		outline: none;
+	}
+
+	html,
+	body {
+		height: 100%;
+	}
+
+	body {
+		height: fit-content;
+	}
+}
+
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+	max-width: 1400px;
+}
